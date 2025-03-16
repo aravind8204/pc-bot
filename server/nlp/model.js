@@ -1,7 +1,7 @@
 // const {OpenAI}= require("openai");
 
 // const openai = new OpenAI({
-//     apiKey: "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",
+//     apiKey: "",
 //   });
 
 // const completion = openai.chat.completions.create({
