@@ -1,0 +1,72 @@
+{
+    "name": "Insurance Policy Bot Corpus",
+    "locale": "en-US",
+    "data": [
+      {
+        "intent": "greet",
+        "utterances": [
+          "Hello",
+          "Hi there",
+          "Hey",
+          "Good morning",
+          "Good afternoon"
+        ],
+        "answers": [
+          "Hello! How can I assist you with insurance policies?",
+          "Hi! How can I help you today?"
+        ]
+      },
+      {
+        "intent": "show_policies",
+        "utterances": [
+          "What insurance policies do you offer?",
+          "Show me available insurance policies",
+          "List all insurance options",
+          "What are your policy types?"
+        ],
+        "answers": [
+          "We offer health, life, and vehicle insurance policies.",
+          "Our available policies are health, life, and vehicle insurance."
+        ]
+      },
+      {
+        "intent": "policy_details",
+        "utterances": [
+          "Tell me about health insurance",
+          "Explain life insurance",
+          "Give me details on vehicle insurance",
+          "How does health insurance work?"
+        ],
+        "answers": [
+          "Health insurance covers medical expenses and provides access to healthcare services.",
+          "Life insurance provides financial support to your family in case of your death.",
+          "Vehicle insurance protects against damages, accidents, and theft of your vehicle."
+        ]
+      },
+      {
+        "intent": "user_info",
+        "utterances": [
+          "My name is John and I am 30 years old",
+          "I am Alex, aged 28",
+          "I am 35 years old"
+        ],
+        "answers": [
+          "Got it, {name}. Your age is {age}. How can I assist you with insurance policies?"
+        ]
+      },
+      {
+        "intent": "goodbye",
+        "utterances": [
+          "Goodbye",
+          "Bye",
+          "See you later",
+          "Thanks, goodbye"
+        ],
+        "answers": [
+          "Goodbye! Have a great day.",
+          "See you soon! Feel free to reach out anytime."
+        ]
+      }
+    ]
+  }
+  
