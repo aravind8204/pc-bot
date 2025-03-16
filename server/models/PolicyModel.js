@@ -26,10 +26,10 @@ const policySchema = new Schema({
     },
     coverage_details:{
         coverage_type:String,
-        coverage_amount:Double,
+        coverage_amount:Number,
     }
 },{timestamps:true,});
 
-const PolicyModel = mongoose.model('Policy',userSchema);
+ 
 
-module.exports = PolicyModel;
+module.exports = mongoose.model('Policy',policySchema);;

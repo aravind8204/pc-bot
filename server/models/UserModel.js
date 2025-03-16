@@ -34,7 +34,7 @@ const userSchema = new Schema(
             state:{
                 type:String,
             },
-            pincode:{
+            zipcode:{
                 type:Number,
                 required: true
             }
@@ -45,6 +45,5 @@ const userSchema = new Schema(
     }
 )
 
-const UserModel = mongoose.model('User',userSchema);
 
-module.exports = UserModel;
+module.exports = mongoose.model('User',userSchema);
