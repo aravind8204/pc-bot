@@ -1,7 +1,7 @@
 // const {OpenAI}= require("openai");
 
 // const openai = new OpenAI({
-//     apiKey: "",
+//     your api key
 //   });
 
 // const completion = openai.chat.completions.create({
