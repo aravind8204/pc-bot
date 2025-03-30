@@ -55,8 +55,8 @@ const statesUSPS = [
   ];
 
  const generatePolicyNo = async(data) =>{
-        const {state,zipcode} = data;
-        const usps = statesUSPS.find(states => states.state.includes(state));
+        const {city,zipcode} = data;
+        const usps = statesUSPS.find(states => states.state.includes(city));
 
         const first_half = usps.code+zipcode.toString().slice(-3)
 
@@ -67,4 +67,95 @@ const statesUSPS = [
         console.log();
   }
 
-generatePolicyNo({state:"Virginia",zipcode:60215})
+const calculatePremium = (data) =>{
+  let annualPremium = 0;
+
+    const { insuranceType, frequencyPayment } = data;
+
+    if (insuranceType === "Life Insurance") {
+        const { age, coverageAmount, policyType, smoke, alcohol, preConditionStatus, policyTerm } = data;
+
+        const baseRates = {
+            "Whole Life Insurance": 1.5,
+            "Term Insurance": 1.2
+        };
+
+        const baseRate = baseRates[policyType] || 1.5;
+        const basePremium = (coverageAmount / 100) * baseRate;
+        
+        const ageFactor = age / 100;
+        const habitsFactor = (smoke === "Yes" ? 0.2 : 0) + (alcohol === "Yes" ? 0.1 : 0) + (preConditionStatus === "Yes" ? 0.3 : 0);
+        const riskFactor = 1 + ageFactor + habitsFactor;
+        const policyTermFactor = policyTerm ? policyTerm / 10 : 1;
+
+        annualPremium = basePremium * riskFactor * policyTermFactor;
+    } 
+    
+    else if (insuranceType === "Health Insurance") {
+        const { age, healthPlanType, currentHealthCondition, familyHealthCondition } = data;
+
+        const fixedRate = healthPlanType === "Family Plan" ? 8000 : 5000;
+        const ageFactor = age / 50;
+        const planFactor = healthPlanType === "Family Plan" ? 1.5 : 1;
+        const healthRiskFactor = (currentHealthCondition === "Yes" ? 0.2 : 0) + 
+                                 (healthPlanType === "Family Plan" && familyHealthCondition === "Yes" ? 0.3 : 0);
+
+        annualPremium = fixedRate * ageFactor * planFactor * (1 + healthRiskFactor);
+    } 
+    
+    else if (insuranceType === "Vehicle Insurance") {
+        const { vehicleMake, vehicleModel, vehicleYear, coverageType, driverExperience, accidentHistory } = data;
+
+        const vehicleRates = {
+            "Third Party": 2000,
+            "Comprehensive": 5000
+        };
+
+        const vehicleRate = vehicleRates[coverageType] || 2000;
+        const coverageFactor = coverageType === "Comprehensive" ? 1.5 : 1.2;
+        const ageFactor = (2025 - vehicleYear) / 10;
+        const driverRiskFactor = (driverExperience < 5 ? 0.2 : 0) + (accidentHistory === "Yes" ? 0.3 : 0);
+
+        annualPremium = vehicleRate * ageFactor * coverageFactor * (1 + driverRiskFactor);
+    }
+
+    // Frequency Adjustment Factors
+    const frequencyFactors = {
+        "Annual": 1.0,
+        "Semi-Annual": 1.05,
+        "Quarterly": 1.10,
+        "Monthly": 1.15
+    };
+
+    const divisionFactors = {
+        "Annual": 1,
+        "Semi-Annual": 2,
+        "Quarterly": 4,
+        "Monthly": 12
+    };
+
+    // Adjust and divide based on frequency
+    const adjustedPremium = (annualPremium * frequencyFactors[frequencyPayment]) / divisionFactors[frequencyPayment];
+
+    return {
+        annualPremium: annualPremium.toFixed(2),
+        finalPremiumPerPayment: adjustedPremium.toFixed(2),
+        frequencyType: frequencyPayment
+    };
+} 
+
+
+const lifeData = {
+  insuranceType: "Life Insurance",
+  age: 23,
+  coverageAmount: 400000,
+  policyType: "Whole Life Insurance",
+  smoke: "No",
+  alcohol: "No",
+  preConditionStatus: "No",
+  policyTerm: null,
+  frequencyPayment: "Quarterly"
+};
+
+console.log("Life Insurance Premium:", calculatePremium(lifeData));
+//generatePolicyNo({state:"Virginia",zipcode:60215})
