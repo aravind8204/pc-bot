@@ -27,6 +27,15 @@ const createPolicy = async(req,res)=>{
     }
 }
 
+const testPolicy =async(req,res)=>{
+    try{
+        const d = req.body;
+        res.send(d);
+    }
+    catch(e){
+        res.send(e);
+    }
+}
 
-module.exports = {createPolicy};
+module.exports = {createPolicy,testPolicy};
 

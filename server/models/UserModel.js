@@ -5,41 +5,45 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema(
     {
         name: {
-            type:String,
-            required: true
-        },
-        email:{
-            type:String,
-            required: true
-        },
-        age:{
-            type:Number,
-            required:true
-        },
-        mobile:{
-            type:Number,
-            required: true
-        },
-        dob:{
-            type:String,
-            required: true
-        },
-        address:{
-            street:{
-                type:String,
-            },
-            city:{
-                type:String,
-            },
-            state:{
-                type:String,
-            },
-            zipcode:{
-                type:Number,
-                required: true
-            }
-        }
-    },
+    first: { type: String, required: true },
+    last: { type: String, default: null }
+  },
+  age: {
+    type: Number,
+    required: true
+  },
+  dob: {
+    type: Date,
+    required: true
+  },
+  gender: {
+    type: String,
+    required: true,
+    enum: ['Male', 'Female', 'Other']
+  },
+  address: {
+    zip: { type: String, required: true },
+    city: { type: String, default: null },
+    number: { type: String, default: null },
+    street: { type: String, default: null },
+    country: { type: String, required: true }
+  },
+  mobile: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  policies: [
+    {
+      policyNumber: { type: String, required: true },
+      insuranceType: { type: String, required: true }
+    }
+  ]
+},
     {
         timestamps:true,
     }
