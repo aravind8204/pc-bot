@@ -1,6 +1,0 @@
-{"input": "List all available insurance policies.", "expected_output": "We offer health, life, and vehicle insurance policies."}
-{"input": "Explain life insurance.", "expected_output": "Life insurance provides financial support to your family in case of your death."}
-{"input": "Give me details about vehicle insurance.", "expected_output": "Vehicle insurance covers damages, accidents, and theft of your vehicle."}
-{"input": "My name is Alex and I am 28 years old.", "expected_output": "Got it, Alex. Your age is 28. How can I assist you with insurance policies?"}
-{"input": "Thank you. Goodbye!", "expected_output": "Goodbye! Feel free to reach out for any assistance."}
-

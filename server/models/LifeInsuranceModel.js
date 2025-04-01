@@ -4,6 +4,11 @@ const Schema = mongoose.Schema;
 
 const lifeSchema = new Schema(
     {
+        userId: { 
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: "User", 
+          required: true 
+        },
         preConditionStatus: {
           type: String,
           required: true,
