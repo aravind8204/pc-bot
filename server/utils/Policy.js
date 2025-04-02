@@ -1,4 +1,5 @@
-const Policy = require("../models/PolicyModel");
+const user = require("../models/UserModel");
+const { checkout } = require("../routes/route");
 
 
 const statesUSPS = [
@@ -91,18 +92,6 @@ const calculatePremium = (data) =>{
         annualPremium = basePremium * riskFactor * policyTermFactor;
     } 
     
-    else if (insuranceType === "Health Insurance") {
-        const { age, healthPlanType, currentHealthCondition, familyHealthCondition } = data;
-
-        const fixedRate = healthPlanType === "Family Plan" ? 8000 : 5000;
-        const ageFactor = age / 50;
-        const planFactor = healthPlanType === "Family Plan" ? 1.5 : 1;
-        const healthRiskFactor = (currentHealthCondition === "Yes" ? 0.2 : 0) + 
-                                 (healthPlanType === "Family Plan" && familyHealthCondition === "Yes" ? 0.3 : 0);
-
-        annualPremium = fixedRate * ageFactor * planFactor * (1 + healthRiskFactor);
-    } 
-    
     else if (insuranceType === "Vehicle Insurance") {
         const { vehicleMake, vehicleModel, vehicleYear, coverageType, driverExperience, accidentHistory } = data;
 
@@ -145,6 +134,12 @@ const calculatePremium = (data) =>{
 } 
 
 
+// const checkCount = async() =>{
+//     const count = await user.countDocuments({});
+//     console.log(count);
+// }
+
+
 const lifeData = {
   insuranceType: "Life Insurance",
   age: 23,
@@ -157,5 +152,8 @@ const lifeData = {
   frequencyPayment: "Quarterly"
 };
 
-console.log("Life Insurance Premium:", calculatePremium(lifeData));
+// console.log("Life Insurance Premium:", calculatePremium(lifeData));
 //generatePolicyNo({state:"Virginia",zipcode:60215})
+// checkCount();
+
+module.exports = { generatePolicyNo, calculatePremium };
