@@ -1,19 +1,15 @@
 const express = require('express');
-const {createPolicy,testPolicy} = require("../controllers/controller");
-const {} = require("../controllers/userController");
-const {} = require("../controllers/insuranceController");
+const {checkPremium,createPolicy,testPolicy} = require("../controllers/controller");
+
 
 
 const router = express.Router();
 
-router.post("/createpolicy", testPolicy);
+router.post("/testpolicy", testPolicy);
 
+router.post("/getpremium", checkPremium);
 
-
-//user routes
-
-
-//insurance routes
+router.post("/createpolicy", createPolicy);
 
 
 module.exports = router;

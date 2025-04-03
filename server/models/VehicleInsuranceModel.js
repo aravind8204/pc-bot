@@ -37,6 +37,9 @@ const VehicleSchema = new Schema({
     required: true, 
     unique: true 
 },
+  accidentHistory:{
+    type:String,
+},
   frequencyPayment: { 
     type: String, 
     enum: ["Annual", "Semi-Annual", "Quarterly", "Monthly"], 

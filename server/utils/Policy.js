@@ -100,12 +100,40 @@ const calculatePremium = (data) =>{
             "Comprehensive": 5000
         };
 
+        const vehicleMakeModelFactors = {
+            "Toyota Corolla": 1.05,
+            "Honda Civic": 1.05,
+            "Ford Fiesta": 1.03,
+            "Hyundai Elantra": 1.04,
+            "Chevrolet Spark": 1.02,
+            "Nissan Versa": 1.02,
+            "Kia Rio": 1.03,
+            "Mazda 3": 1.04,
+            "Toyota Camry": 1.1,
+            "Honda Accord": 1.1,
+            "Ford Fusion": 1.1,
+            "Chevrolet Malibu": 1.08,
+            "BMW 3 Series": 1.3, // Luxury cars
+            "Mercedes-Benz C-Class": 1.35,
+            "Audi A4": 1.3,
+            "Tesla Model 3": 1.25,
+            "Lexus ES": 1.2,
+            "Jaguar XE": 1.4,  // Premium brands
+            "Porsche 911": 1.5,  // High-end sports cars
+            "Lamborghini Huracán": 1.8,  // Exotic cars
+            "Ferrari 488": 1.9  // Exotic cars
+        };
+
         const vehicleRate = vehicleRates[coverageType] || 2000;
         const coverageFactor = coverageType === "Comprehensive" ? 1.5 : 1.2;
         const ageFactor = (2025 - vehicleYear) / 10;
         const driverRiskFactor = (driverExperience < 5 ? 0.2 : 0) + (accidentHistory === "Yes" ? 0.3 : 0);
 
-        annualPremium = vehicleRate * ageFactor * coverageFactor * (1 + driverRiskFactor);
+        const vehicleMakeModel = `${vehicleMake} ${vehicleModel}`;
+        const makeModelFactor = vehicleMakeModelFactors[vehicleMakeModel] || 1.0;
+
+
+        annualPremium = vehicleRate * ageFactor * coverageFactor * (1 + driverRiskFactor) * makeModelFactor;
     }
 
     // Frequency Adjustment Factors
