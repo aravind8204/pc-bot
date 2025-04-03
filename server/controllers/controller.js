@@ -1,6 +1,6 @@
 const Life = require("../models/LifeInsuranceModel");
 const Vehicle = require("../models/VehicleInsuranceModel");
-const User = reuqire("../models/UserModel.js")
+const User = require("../models/UserModel.js")
 const {generatePolicyNo,calculatePremium} = require("../utils/Policy");
 
 

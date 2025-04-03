@@ -1,5 +1,6 @@
 const user = require("../models/UserModel");
-const { checkout } = require("../routes/route");
+const vehicleModel = require("../models/VehicleInsuranceModel");
+const lifeModel = require("../models/LifeInsuranceModel");
 
 
 const statesUSPS = [
@@ -55,19 +56,31 @@ const statesUSPS = [
     { state: "Wyoming", code: "WY" }
   ];
 
- const generatePolicyNo = async(data) =>{
-        const {city,zipcode} = data;
-        const usps = statesUSPS.find(states => states.state.includes(city));
 
-        const first_half = usps.code+zipcode.toString().slice(-3)
+ const generatePolicyNo = async(req,res,data) =>{
+        const {city,zipcode} = req.body;
+        let r;
+        const states = statesUSPS.find(states => states.state.includes(city));
+        if (!states) {console.log("h"); }
+        else{
+            const first_half =  states.code+zipcode.toString().slice(-3)
+        const second_half = await vehicleModel.countDocuments()+await lifeModel.countDocuments();
 
-        const latestRecord = await Policy.findOne().sort({ _id: -1 });
+        r = first_half+second_half.toString().padStart(5, '0');
+        console.log(r);
+        }
+        res.send({policyNo:r});
 
-        console.log(latestRecord)
 
-        console.log();
+        
+        
+
+        
+
+        
   }
 
+  //generatePolicyNo({state:"Wyoming",zipcode:60215})
 const calculatePremium = (data) =>{
   let annualPremium = 0;
 
@@ -181,7 +194,7 @@ const lifeData = {
 };
 
 // console.log("Life Insurance Premium:", calculatePremium(lifeData));
-//generatePolicyNo({state:"Virginia",zipcode:60215})
+
 // checkCount();
 
 module.exports = { generatePolicyNo, calculatePremium };
