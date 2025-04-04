@@ -1,8 +1,9 @@
+// Importing necessary models
 const user = require("../models/UserModel");
 const vehicleModel = require("../models/VehicleInsuranceModel");
 const lifeModel = require("../models/LifeInsuranceModel");
 
-
+// List of US states and their corresponding USPS codes
 const statesUSPS = [
     { state: "Alabama", code: "AL" },
     { state: "Alaska", code: "AK" },
@@ -56,20 +57,32 @@ const statesUSPS = [
     { state: "Wyoming", code: "WY" }
   ];
 
-
+// Function to generate a unique policy number based on city and zipcode
  const generatePolicyNo = async(req,res,data) =>{
         const {city,zipcode} = req.body;
         let r;
         const states = statesUSPS.find(states => states.state.includes(city));
         if (!states) {console.log("h"); }
         else{
-            const first_half =  states.code+zipcode.toString().slice(-3)
-        const second_half = await vehicleModel.countDocuments()+await lifeModel.countDocuments();
+            // Construct the first part of the policy number (state code + last 3 digits of zipcode)
+            const first_half = states.code+zipcode.toString().slice(-3)
 
-        r = first_half+second_half.toString().padStart(5, '0');
-        console.log(r);
+            // Get the current count of documents in both vehicleModel and lifeModel collections
+            const second_half = await vehicleModel.countDocuments()+await lifeModel.countDocuments();
+
+            r = first_half+second_half.toString().padStart(5, '0');
+            console.log(r);
         }
         res.send({policyNo:r});
+
+// new logic for the function     IMP NOTE :: Need to implement this logic
+        // try {
+            // Ensure that you find a state that matches the city
+            // const state = statesUSPS.find(states => states.state.includes(city));
+        
+            // if (!state) {
+            //   throw new Error(`No state found for city: ${city}`);
+            // }
 
 
         
@@ -80,39 +93,50 @@ const statesUSPS = [
         
   }
 
-  //generatePolicyNo({state:"Wyoming",zipcode:60215})
+
+  // Function to calculate the insurance premium based on provided data
 const calculatePremium = (data) =>{
   let annualPremium = 0;
 
     const { insuranceType, frequencyPayment } = data;
 
     if (insuranceType === "Life Insurance") {
+        // Extract life insurance related data
         const { age, coverageAmount, policyType, smoke, alcohol, preConditionStatus, policyTerm } = data;
 
+        // Base rates for life insurance policies
         const baseRates = {
             "Whole Life Insurance": 1.5,
             "Term Insurance": 1.2
         };
 
+        // Get the base rate for the policy type (default to 1.5 if not found)
         const baseRate = baseRates[policyType] || 1.5;
         const basePremium = (coverageAmount / 100) * baseRate;
         
+        // Risk factors based on age, habits, and preconditions
         const ageFactor = age / 100;
         const habitsFactor = (smoke === "Yes" ? 0.2 : 0) + (alcohol === "Yes" ? 0.1 : 0) + (preConditionStatus === "Yes" ? 0.3 : 0);
-        const riskFactor = 1 + ageFactor + habitsFactor;
-        const policyTermFactor = policyTerm ? policyTerm / 10 : 1;
+        const riskFactor = 1 + ageFactor + habitsFactor; 
 
+        // Adjust for policy term
+        const policyTermFactor = policyTerm ? policyTerm / 10 : 1;
+        
+        // Calculate the annual premium
         annualPremium = basePremium * riskFactor * policyTermFactor;
     } 
     
     else if (insuranceType === "Vehicle Insurance") {
+        // Extract vehicle insurance related data
         const { vehicleMake, vehicleModel, vehicleYear, coverageType, driverExperience, accidentHistory } = data;
 
+        // Vehicle insurance rates based on coverage type
         const vehicleRates = {
             "Third Party": 2000,
             "Comprehensive": 5000
         };
 
+        // Factors based on vehicle make and model
         const vehicleMakeModelFactors = {
             "Toyota Corolla": 1.05,
             "Honda Civic": 1.05,
@@ -137,15 +161,17 @@ const calculatePremium = (data) =>{
             "Ferrari 488": 1.9  // Exotic cars
         };
 
+        // Get the vehicle rate based on coverage type
         const vehicleRate = vehicleRates[coverageType] || 2000;
         const coverageFactor = coverageType === "Comprehensive" ? 1.5 : 1.2;
         const ageFactor = (2025 - vehicleYear) / 10;
         const driverRiskFactor = (driverExperience < 5 ? 0.2 : 0) + (accidentHistory === "Yes" ? 0.3 : 0);
 
+        // Adjust the rate based on make and model
         const vehicleMakeModel = `${vehicleMake} ${vehicleModel}`;
         const makeModelFactor = vehicleMakeModelFactors[vehicleMakeModel] || 1.0;
 
-
+        // Calculate the annual premium for vehicle insurance
         annualPremium = vehicleRate * ageFactor * coverageFactor * (1 + driverRiskFactor) * makeModelFactor;
     }
 
@@ -197,4 +223,5 @@ const lifeData = {
 
 // checkCount();
 
+// Export the functions to be used
 module.exports = { generatePolicyNo, calculatePremium };

@@ -1,24 +1,33 @@
+// Importing required models and utility functions
 const Life = require("../models/LifeInsuranceModel");
 const Vehicle = require("../models/VehicleInsuranceModel");
 const User = require("../models/UserModel.js")
 const {generatePolicyNo,calculatePremium} = require("../utils/Policy");
 
-
+// Function to check the premium based on request data
 const checkPremium = async(req,res) =>{
     try{
-        const result = calculatePremium(req.body);
+        // Calculate the premium using request data
+        const result = calculatePremium(req.body); 
+
+        // Return the calculated premium
         res.status(200).json(result.finalPremiumPerPayment);
     }
     catch(err){
+        // Handle errors and send the error message
         res.status(500).send(err.message);
     }
 }
 
+// Function to create a new insurance policy for a user
 const createPolicy = async(req, res) =>{
     try{
-        const {userData}=req.body;
+        const {userData}=req.body; // Destructure user data from the request body
+
+        // Generate a unique policy number based on the user's city and zipcode
         const policyNo = generatePolicyNo({city:userData.address.city, zipcode:userData.address.zip});
 
+        // Create a new user record with the policy details
         const userresult = await User.create({name:userData.name,
                                             age:userData.age,
                                             dob:userData.dob,
@@ -31,10 +40,11 @@ const createPolicy = async(req, res) =>{
                                                 insuranceType: userData.InsuranceType
                                             }]});
 
+        // Depending on the insurance type, create the relevant policy (Life or Vehicle)
         if (userData.InsuranceType=="Life Insurance"){
             const {lifeData} = req.body;
             const result = await Life.create({
-                userid:userresult._id,
+                userid:userresult._id,  // Link the policy to the user
                 preConditionStatus:lifeData.preConditionStatus,
                 preConditionStatusDesc:lifeData.preConditionStatusDesc,
                 smoke:lifeData.smoke,
@@ -50,7 +60,7 @@ const createPolicy = async(req, res) =>{
         else if(userData.InsuranceType=="Vehicle Insurance"){
             const {vehicleData} = req.body;
             const result = await Vehicle.create({
-                userid:userresult._id,
+                userid:userresult._id,  // Link the policy to the user
                 driverLicense:vehicleData.driverLicense,
                 driverExp:vehicleData.driverExp,
                 vehicleMake:vehicleData.vehicleMake,
@@ -64,6 +74,7 @@ const createPolicy = async(req, res) =>{
                 policyType:vehicleData.policyType
             });
         }
+         // Send a response with the generated policy number
         res.status(200).json({policyNo});
     }
     catch(err){
@@ -71,15 +82,18 @@ const createPolicy = async(req, res) =>{
     }
 }
 
-const testPolicy =async(req,res)=>{
-    try{
-        const d = req.body;
-        res.send(d);
+// Test function to receive and send back the data (useful for debugging)
+const testPolicy = async (req, res) => {
+    try {
+      // Send back the data received in the request body
+      const d = req.body;
+      res.send(d);
+    } catch (e) {
+      // If an error occurs, send the error message
+      res.send(e);
     }
-    catch(e){
-        res.send(e);
-    }
-}
+  }
 
+  // Export the functions to be used in the routes
 module.exports = {createPolicy,testPolicy,checkPremium};
 
