@@ -8,7 +8,7 @@ const {generatePolicyNo,calculatePremium} = require("../utils/Policy");
 const checkPremium = async(req,res) =>{
     try{
         // Calculate the premium using request data
-        const result = calculatePremium(req.body); 
+        const result = calculatePremium(req.body);
 
         // Return the calculated premium
         res.status(200).json(result.finalPremiumPerPayment);
