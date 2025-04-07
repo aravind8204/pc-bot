@@ -42,7 +42,12 @@ const userSchema = new Schema(
       policyNumber: { type: String, required: true },
       insuranceType: { type: String, required: true }
     }
-  ]
+  ],
+  bankDetails: {
+    bankName: { type: String, required: true },
+    accountNumber: { type: Number, required: true },
+    routingNumber: { type: Number, required: true }
+  }
 },
     {
         timestamps:true,
