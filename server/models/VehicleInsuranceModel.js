@@ -54,6 +54,9 @@ const VehicleSchema = new Schema({
     enum: ["Third Party", "Comprehensive"], 
     required: true 
 },
+status: {
+  type: String,
+}
 }, { timestamps: true });
 
  

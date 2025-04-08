@@ -41,7 +41,6 @@ const userSchema = new Schema(
     {
       policyNumber: { type: String, required: true },
       insuranceType: { type: String, required: true },
-      status: {type: String}
     }
   ],
   bankDetails: {

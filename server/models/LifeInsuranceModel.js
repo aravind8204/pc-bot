@@ -53,6 +53,9 @@ const lifeSchema = new Schema(
           type: String,
           required: true,
         },
+        status: {
+          type: String,
+        }
       }, { timestamps: true }
 )
 

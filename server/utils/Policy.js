@@ -84,12 +84,6 @@ const statesUSPS = [
             //   throw new Error(`No state found for city: ${city}`);
             // }
 
-
-        
-        
-
-        
-
         
   }
 
