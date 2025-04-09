@@ -58,31 +58,19 @@ const statesUSPS = [
   ];
 
 // Function to generate a unique policy number based on city and zipcode
- const generatePolicyNo = async(req,res,data) =>{
-        const {city,zipcode} = req.body;
+ const generatePolicyNo = (data) =>{
+        const {city,zipcode} =data;
         let r;
-        const states = statesUSPS.find(states => states.state.includes(city));
-        if (!states) {console.log("h"); }
-        else{
-            // Construct the first part of the policy number (state code + last 3 digits of zipcode)
-            const first_half = states.code+zipcode.toString().slice(-3)
-
-            // Get the current count of documents in both vehicleModel and lifeModel collections
-            //const second_half = await vehicleModel.countDocuments()+await lifeModel.countDocuments();
-            const second_half = 121
+        try {
+            //Ensure that you find a state that matches the city
+            const state = statesUSPS.find(states => states.state.includes(city));
+            const first_half = state.code+zipcode.toString().slice(-3)
+            const second_half = 0;
             r = first_half+second_half.toString().padStart(5, '0');
-            console.log(r);
+            return r;
+        }catch(e){
+            console.log(e);
         }
-        res.send({policyNo:r});
-
-// new logic for the function     IMP NOTE :: Need to implement this logic
-        // try {
-            // Ensure that you find a state that matches the city
-            // const state = statesUSPS.find(states => states.state.includes(city));
-        
-            // if (!state) {
-            //   throw new Error(`No state found for city: ${city}`);
-            // }
 
         
   }

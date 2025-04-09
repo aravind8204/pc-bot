@@ -82,6 +82,15 @@ const createPolicy = async(req, res) =>{
     }
 }
 
+const getPolicyNo = async(req,res)=>{
+    try {
+        const policy = generatePolicyNo(req.body);
+        res.status(200).json(policy)
+    } catch (error) {
+        res.send(500).json({error});
+    }
+}
+
 // Test function to receive and send back the data (useful for debugging)
 const testPolicy = async (req, res) => {
     try {
@@ -95,5 +104,5 @@ const testPolicy = async (req, res) => {
   }
 
   // Export the functions to be used in the routes
-module.exports = {createPolicy,testPolicy,checkPremium};
+module.exports = {createPolicy,testPolicy,checkPremium,getPolicyNo};
 
