@@ -68,8 +68,8 @@ const statesUSPS = [
             const first_half = states.code+zipcode.toString().slice(-3)
 
             // Get the current count of documents in both vehicleModel and lifeModel collections
-            const second_half = await vehicleModel.countDocuments()+await lifeModel.countDocuments();
-
+            //const second_half = await vehicleModel.countDocuments()+await lifeModel.countDocuments();
+            const second_half = 121
             r = first_half+second_half.toString().padStart(5, '0');
             console.log(r);
         }
