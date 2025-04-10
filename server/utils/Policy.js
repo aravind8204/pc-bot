@@ -1,7 +1,7 @@
 // Importing necessary models
 const user = require("../models/UserModel");
-const vehicleModel = require("../models/VehicleInsuranceModel");
-const lifeModel = require("../models/LifeInsuranceModel");
+const LifeInsuranceModel = require("../models/LifeInsuranceModel");
+const VehicleInsuranceModel = require("../models/VehicleInsuranceModel");
 
 // List of US states and their corresponding USPS codes
 const statesUSPS = [
@@ -57,6 +57,11 @@ const statesUSPS = [
     { state: "Wyoming", code: "WY" }
   ];
 
+const getDocumentCount = async()=>{
+    const count = await VehicleInsuranceModel.countDocuments() + LifeInsuranceModel.countDocuments();
+    return count;
+}
+
 // Function to generate a unique policy number based on city and zipcode
  const generatePolicyNo = (data) =>{
         const {city,zipcode} =data;
@@ -65,7 +70,7 @@ const statesUSPS = [
             //Ensure that you find a state that matches the city
             const state = statesUSPS.find(states => states.state.includes(city));
             const first_half = "AA"+zipcode.toString().slice(-3)
-            const second_half = 0;
+            const second_half = getDocumentCount();
             r = first_half+second_half.toString().padStart(5, '0');
             return r;
         }catch(e){
