@@ -22,6 +22,7 @@ const checkPremium = async(req,res) =>{
 // Function to create a new insurance policy for a user
 const createPolicy = async(req, res) =>{
     try{
+        console.log(req.body);
         const {userData}=req.body; // Destructure user data from the request body
 
         // Generate a unique policy number based on the user's city and zipcode
