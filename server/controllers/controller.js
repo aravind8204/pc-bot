@@ -35,6 +35,11 @@ const createPolicy = async(req, res) =>{
                                             address:userData.address,
                                             mobile:userData.mobile,
                                             email:userData.email,
+                                            bankDetails:{
+                                                bankName:userData.bankName,
+                                                accountNumber:userData.accountNo,
+                                                routingNumber:userData.routingNumber
+                                            },
                                             policies:[{
                                                 policyNumber: policyNo,
                                                 insuranceType: userData.InsuranceType

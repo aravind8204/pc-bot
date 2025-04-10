@@ -5,7 +5,7 @@ const VehicleSchema = new Schema({
   userId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "User", 
-    required: true 
+    // required: true 
 },
   driverLicense: { 
     type: String, 
