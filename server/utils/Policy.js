@@ -58,19 +58,20 @@ const statesUSPS = [
   ];
 
 const getDocumentCount = async()=>{
-    const count = await VehicleInsuranceModel.countDocuments() + LifeInsuranceModel.countDocuments();
+    const count = await VehicleInsuranceModel.countDocuments() + await LifeInsuranceModel.countDocuments();
     return count;
 }
 
+
 // Function to generate a unique policy number based on city and zipcode
- const generatePolicyNo = (data) =>{
+ const generatePolicyNo = async(data) =>{
         const {city,zipcode} =data;
         let r;
         try {
             //Ensure that you find a state that matches the city
             const state = statesUSPS.find(states => states.state.includes(city));
             const first_half = "AA"+zipcode.toString().slice(-3)
-            const second_half = getDocumentCount();
+            const second_half = await getDocumentCount();
             r = first_half+second_half.toString().padStart(5, '0');
             return r;
         }catch(e){

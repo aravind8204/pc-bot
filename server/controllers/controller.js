@@ -89,7 +89,7 @@ const createPolicy = async(req, res) =>{
 
 const getPolicyNo = async(req,res)=>{
     try {
-        const policy = generatePolicyNo(req.body);
+        const policy =await generatePolicyNo(req.body);
         res.status(200).json(policy)
     } catch (error) {
         res.send(500).json({error});
