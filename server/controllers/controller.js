@@ -83,7 +83,7 @@ const createPolicy = async(req, res) =>{
         res.status(200).json({policyNo});
     }
     catch(err){
-        res.status(500).send(err.message);
+        res.status(500).send(err);
     }
 }
 
