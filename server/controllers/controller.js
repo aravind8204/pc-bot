@@ -25,7 +25,7 @@ const createPolicy = async(req, res) =>{
         const {userData}=req.body; // Destructure user data from the request body
 
         // Generate a unique policy number based on the user's city and zipcode
-        const policyNo = generatePolicyNo({city:userData.address.city, zipcode:userData.address.zip});
+        const policyNo = await generatePolicyNo({city:userData.address.city, zipcode:userData.address.zip});
 
         // Create a new user record with the policy details
         const userresult = await User.create({name:userData.name,
@@ -49,7 +49,7 @@ const createPolicy = async(req, res) =>{
         if (userData.InsuranceType=="Life Insurance"){
             const {lifeData} = req.body;
             const result = await Life.create({
-                userid:userresult._id,  // Link the policy to the user
+                userId:userresult._id,  // Link the policy to the user
                 preConditionStatus:lifeData.preConditionStatus,
                 preConditionStatusDesc:lifeData.preConditionStatusDesc,
                 smoke:lifeData.smoke,
@@ -65,7 +65,7 @@ const createPolicy = async(req, res) =>{
         else if(userData.InsuranceType=="Vehicle Insurance"){
             const {vehicleData} = req.body;
             const result = await Vehicle.create({
-                userid:userresult._id,  // Link the policy to the user
+                userId:userresult._id,  // Link the policy to the user
                 driverLicense:vehicleData.driverLicense,
                 driverExp:vehicleData.driverExp,
                 vehicleMake:vehicleData.vehicleMake,

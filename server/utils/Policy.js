@@ -58,7 +58,7 @@ const statesUSPS = [
   ];
 
 const getDocumentCount = async()=>{
-    const count = await VehicleInsuranceModel.countDocuments() + await LifeInsuranceModel.countDocuments();
+    const count = await VehicleInsuranceModel.countDocuments() + await LifeInsuranceModel.countDocuments() +1;
     return count;
 }
 
