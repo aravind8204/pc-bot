@@ -51,7 +51,7 @@ const VehicleSchema = new Schema({
 },
   policyType: { 
     type: String, 
-    enum: ["Third Party", "Comprehensive"], 
+    enum: ["Third Party Liability", "Comprehensive"], 
     required: true 
 },
 status: {
