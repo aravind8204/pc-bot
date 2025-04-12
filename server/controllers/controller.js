@@ -81,6 +81,20 @@ const createPolicy = async(req, res) =>{
                 policyType:vehicleData.policyType
             });
         }
+        //working on the response object to send back the user and policy details
+        // work is remaining
+        const response = {
+            user:{
+                userName:userresult.name.first+" "+userresult.name.last? userresult.name.last:"",
+                userEMail:userresult.email,
+                userPhone:userresult.mobile,
+            },
+            policy:{
+                policyNumber:policyNo,
+                policyType:userData.InsuranceType,
+                
+            }
+        }
          // Send a response with the generated policy number
         res.status(200).json({policyNo});
     }
