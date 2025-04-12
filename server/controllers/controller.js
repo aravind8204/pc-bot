@@ -49,6 +49,7 @@ const createPolicy = async(req, res) =>{
         if (userData.InsuranceType=="Life Insurance"){
             const {lifeData} = req.body;
             const result = await Life.create({
+                policyNumber:policyNo,
                 userId:userresult._id,  // Link the policy to the user
                 preConditionStatus:lifeData.preConditionStatus,
                 preConditionStatusDesc:lifeData.preConditionStatusDesc,
@@ -65,6 +66,7 @@ const createPolicy = async(req, res) =>{
         else if(userData.InsuranceType=="Vehicle Insurance"){
             const {vehicleData} = req.body;
             const result = await Vehicle.create({
+                policyNumber:policyNo,
                 userId:userresult._id,  // Link the policy to the user
                 driverLicense:vehicleData.driverLicense,
                 driverExp:vehicleData.driverExp,
