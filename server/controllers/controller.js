@@ -92,11 +92,12 @@ const createPolicy = async(req, res) =>{
             policy:{
                 policyNumber:policyNo,
                 policyType:userData.InsuranceType,
-                
+                frequency:userData.frequencyPayment,
+                status:result.status
             }
         }
          // Send a response with the generated policy number
-        res.status(200).json({policyNo});
+        res.status(200).json(response);
     }
     catch(err){
         res.status(500).send(err);
