@@ -40,15 +40,17 @@ const createPolicy = async(req, res) =>{
                                                 accountNumber:userData.accountNo,
                                                 routingNumber:userData.routingNumber
                                             },
+                                            status:userData.status,
                                             policies:[{
                                                 policyNumber: policyNo,
                                                 insuranceType: userData.InsuranceType
                                             }]});
-
+        
+        var result;
         // Depending on the insurance type, create the relevant policy (Life or Vehicle)
         if (userData.InsuranceType=="Life Insurance"){
             const {lifeData} = req.body;
-            const result = await Life.create({
+             result = await Life.create({
                 policyNumber:policyNo,
                 userId:userresult._id,  // Link the policy to the user
                 preConditionStatus:lifeData.preConditionStatus,
@@ -60,12 +62,13 @@ const createPolicy = async(req, res) =>{
                 coverageAmount:lifeData.coverageAmount,
                 frequencyPayment:lifeData.frequencyPayment,
                 beneficiaryName:lifeData.beneficiaryName,
-                beneficiaryRelation:lifeData.beneficiaryRelation
+                beneficiaryRelation:lifeData.beneficiaryRelation,
+                status:lifeData.status
             });
         }
         else if(userData.InsuranceType=="Vehicle Insurance"){
             const {vehicleData} = req.body;
-            const result = await Vehicle.create({
+             result = await Vehicle.create({
                 policyNumber:policyNo,
                 userId:userresult._id,  // Link the policy to the user
                 driverLicense:vehicleData.driverLicense,
@@ -78,7 +81,8 @@ const createPolicy = async(req, res) =>{
                 accidentHistory:vehicleData.accidentHistory,
                 frequencyPayment:vehicleData.frequencyPayment,
                 deductible:vehicleData.deductible,
-                policyType:vehicleData.policyType
+                policyType:vehicleData.policyType,
+                status:vehicleData.status
             });
         }
         //working on the response object to send back the user and policy details
