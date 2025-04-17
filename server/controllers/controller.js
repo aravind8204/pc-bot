@@ -25,7 +25,14 @@ const createPolicy = async(req, res) =>{
         const {userData}=req.body; // Destructure user data from the request body
 
         // Generate a unique policy number based on the user's city and zipcode
-        const policyNo = await generatePolicyNo({city:userData.address.city, zipcode:userData.address.zip});
+        var policyNo;
+
+        if (userData.status == "Cancelled"){
+            policyNo = await generatePolicyNo({city:userData.address.city, zipcode:userData.address.zip});
+        }
+        else{
+            policyNo = "Not Applicable";
+        }
 
         // Create a new user record with the policy details
         const userresult = await User.create({name:userData.name,
@@ -87,18 +94,17 @@ const createPolicy = async(req, res) =>{
         }
         //working on the response object to send back the user and policy details
         // work is remaining
+
+        const lastName = userresult.name.last? userresult.name.last:""
         const response = {
-            user:{
-                userName:userresult.name.first+" "+userresult.name.last? userresult.name.last:"",
+            
+                userName:userresult.name.first+" "+lastName,
                 userEMail:userresult.email,
                 userPhone:userresult.mobile,
-            },
-            policy:{
                 policyNumber:policyNo,
                 policyType:userData.InsuranceType,
                 frequency:userData.frequencyPayment,
                 status:result.status
-            }
         }
          // Send a response with the generated policy number
         res.status(200).json(response);

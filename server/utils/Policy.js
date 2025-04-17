@@ -108,7 +108,7 @@ const calculatePremium = (data) =>{
         const riskFactor = 1 + ageFactor + habitsFactor; 
 
         // Adjust for policy term
-        const policyTermFactor = policyTerm ? policyTerm / 10 : 1;
+        const policyTermFactor = policyTerm ? 10 / policyTerm : 1;
         
         // Calculate the annual premium
         annualPremium = basePremium * riskFactor * policyTermFactor;
