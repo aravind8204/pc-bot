@@ -96,19 +96,9 @@ const createPolicy = async(req, res) =>{
         // work is remaining
 
         const lastName = userresult.name.last? userresult.name.last:""
-        const response = {
-            
-                userName:userresult.name.first+" "+lastName,
-                userEMail:userresult.email,
-                userPhone:userresult.mobile,
-                policyNumber:policyNo,
-                policyType:userData.InsuranceType,
-                frequency:userData.frequencyPayment,
-                status:result.status
-        }
-        console.log(response)
+        
          // Send a response with the generated policy number
-        res.status(200).json(response);
+        res.status(200).json(policyNo);
     }
     catch(err){
         res.status(500).send(err);
