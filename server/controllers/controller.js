@@ -106,6 +106,7 @@ const createPolicy = async(req, res) =>{
                 frequency:userData.frequencyPayment,
                 status:result.status
         }
+        console.log(response)
          // Send a response with the generated policy number
         res.status(200).json(response);
     }
