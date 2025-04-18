@@ -25,9 +25,10 @@ const sendMail = async(data) =>{
         permium:data.premium
     }
     try{
-        const response = await emailjs.send("service_dpsxrmu","template_yr3r9fq",content,{
-            publickey:"GzWI8GFdBI5n0kjHB"
-        });
+        emailjs.init({
+            publicKey: 'GzWI8GFdBI5n0kjHB'
+        })
+        const response = await emailjs.send("service_dpsxrmu","template_yr3r9fq",content);
         console.log("email sent",response);
     }
     catch(e){
