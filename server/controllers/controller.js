@@ -28,7 +28,7 @@ const createPolicy = async(req, res) =>{
         // Generate a unique policy number based on the user's city and zipcode
         var policyNo;
 
-        if (userData.status == "Cancelled"){
+        if (userData.status == "Active"){
             policyNo = await generatePolicyNo({city:userData.address.city, zipcode:userData.address.zip});
         }
         else{
