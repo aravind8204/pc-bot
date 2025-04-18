@@ -119,8 +119,8 @@ const createPolicy = async(req, res) =>{
             month: '2-digit',
             day: '2-digit'}) 
         const mailData={
-            userEmail:userresult.email,
-            userName:userresult.name.first+" "+lastName,
+            email:userresult.email,
+            name:userresult.name.first+" "+lastName,
             policyNumber:policyNo,
             insuranceType:userresult.policies[0].insuranceType,
             startDate:startDate,
