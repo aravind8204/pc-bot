@@ -29,6 +29,7 @@ const sendMail = async(data) =>{
             publicKey: 'GzWI8GFdBI5n0kjHB'
         })
         const response = await emailjs.send("service_dpsxrmu","template_yr3r9fq",content);
+        console.log(content)
         console.log("email sent",response);
     }
     catch(e){
