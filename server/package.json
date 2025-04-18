@@ -12,8 +12,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
+    "@emailjs/nodejs": "^5.0.2",
     "@nlpjs/basic": "^5.0.0-alpha.5",
+    "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "express": "^4.21.2",

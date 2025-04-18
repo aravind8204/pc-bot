@@ -1,6 +1,6 @@
 const pdfkit = require("pdfkit");
 const fs = require("fs");
-const emailjs = require('emailjs-com');
+const emailjs = require("@emailjs/nodejs");
 
 const generatePdf= (data)=> {
 
