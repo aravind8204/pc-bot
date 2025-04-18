@@ -3,7 +3,7 @@ const Life = require("../models/LifeInsuranceModel");
 const Vehicle = require("../models/VehicleInsuranceModel");
 const User = require("../models/UserModel.js")
 const {generatePolicyNo,calculatePremium} = require("../utils/Policy");
-const {sendMail,generatePdf} = require("../utils/util.js");
+const {createPolicyPdf} = require("../utils/util.js");
 
 // Function to check the premium based on request data
 const checkPremium = async(req,res) =>{
@@ -113,23 +113,32 @@ const createPolicy = async(req, res) =>{
         // work is remaining
 
         const lastName = userresult.name.last? userresult.name.last:""
-        const date = new Date(result.createdAt);
-        const startDate= date.toLocaleString('en-US',{timeZone: 'America/New_York',
+        const date1 = new Date(result.createdAt);
+        const date2 = new Date(result.expiryDate)
+        const startDate= date1.toLocaleString('en-US',{timeZone: 'America/New_York',
             year: 'numeric',
             month: '2-digit',
             day: '2-digit'}) 
+            const expiry= date2.toLocaleString('en-US',{timeZone: 'America/New_York',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'}) 
         const mailData={
             email:userresult.email,
             name:userresult.name.first+" "+lastName,
             policyNumber:policyNo,
             insuranceType:userresult.policies[0].insuranceType,
             startDate:startDate,
-            expiryDate:result.expiryDate,
+            expiryDate:expiry,
             permium:result.premium
         }
-        sendMail(mailData);
+
+        const filename = `policy_${policyNo}.pdf`;
+
+        const fileUrl = await createPolicyPdf(mailData, filename);
+        const fullUrl = `${req.protocol}://${req.get('host')}${fileUrl}`;
          // Send a response with the generated policy number
-        res.status(200).json(policyNo);
+        res.status(200).json({policyNo,fullUrl});
     }
     catch(err){
         res.status(500).send(err);

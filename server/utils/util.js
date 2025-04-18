@@ -1,41 +1,28 @@
-const pdfkit = require("pdfkit");
-const fs = require("fs");
-const emailjs = require("@emailjs/nodejs");
+const fs = require('fs');
+const PDFDocument = require('pdfkit');
+const path = require('path');
 
-const generatePdf= (data)=> {
+// Function to generate PDF
+function createPolicyPdf(data, filename) {
+  const doc = new PDFDocument();
+    const filepath = path.join(__dirname,'documents',filename);
+  const stream = fs.createWriteStream(filepath)
 
-    const doc = new pdfkit();
-    doc.pipe(fs.createWriteStream(`../documents/${data.policyNumber}.pdf`));
+  doc.pipe(stream);
 
-    doc.fillColor("Blue")
-    .fontSize(20)
-    .text("LM Insurance");
+  // Example content — you can customize this
+  doc.fontSize(20).text('Insurance Policy Document', { align: 'center' });
+  doc.moveDown();
+  doc.fontSize(14).text(`Policy Number: ${data.policyNumber}`);
+  doc.text(`Name: ${data.name}`);
+  doc.text(`Email: ₹${data.email}`);
+  doc.text(`Insurance Type: ${data.insuranceType}`);
+  doc.text(`Start Date: ${data.startDate}`);
+  doc.text(`Expiry Date: ${data.expiryDate}`);
 
-    doc.end();
+  doc.end();
+
+  return `/pdfs/${filename}`;
 }
 
-const sendMail = async(data) =>{
-    const content = {
-        userEmail:data.email,
-        userName:data.name,
-        policyNumber:data.policyNumber,
-        insuranceType:data.insuranceType,
-        startDate:data.startDate,
-        expiryDate:data.expiry,
-        permium:data.premium
-    }
-    try{
-        emailjs.init({
-            publicKey: 'GzWI8GFdBI5n0kjHB'
-        })
-        const response = await emailjs.send("service_dpsxrmu","template_yr3r9fq",content);
-        console.log(content)
-        console.log("email sent",response);
-    }
-    catch(e){
-        console.log(e);
-    }
-    
-}
-
-module.exports = {generatePdf,sendMail};
+module.exports={createPolicyPdf}

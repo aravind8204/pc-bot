@@ -39,8 +39,8 @@ const userSchema = new Schema(
   },
   policies: [
     {
-      policyNumber: { type: String, required: true },
-      insuranceType: { type: String, required: true },
+      policyNumber: { type: String},
+      insuranceType: { type: String},
     }
   ],
   bankDetails: {
