@@ -3,6 +3,7 @@ const Life = require("../models/LifeInsuranceModel");
 const Vehicle = require("../models/VehicleInsuranceModel");
 const User = require("../models/UserModel.js")
 const {generatePolicyNo,calculatePremium} = require("../utils/Policy");
+const {sendMail,generatePdf} = require("../utils/util.js");
 
 // Function to check the premium based on request data
 const checkPremium = async(req,res) =>{
@@ -54,9 +55,19 @@ const createPolicy = async(req, res) =>{
                                             }]});
         
         var result;
+        const now = new Date();
+        var expiryDate;
         // Depending on the insurance type, create the relevant policy (Life or Vehicle)
         if (userData.InsuranceType=="Life Insurance"){
             const {lifeData} = req.body;
+    
+            if (lifeData.policyType === 'Whole Life Insurance') {
+                expiryDate = new Date(now.setFullYear(now.getFullYear() + 1));
+            } 
+            else if (lifeData.policyType === 'Term Life Insurance' && lifeData.policyTerm) {
+                expiryDate = new Date(now.setFullYear(now.getFullYear() + this.policyTerm));
+            }
+
              result = await Life.create({
                 policyNumber:policyNo,
                 userId:userresult._id,  // Link the policy to the user
@@ -70,11 +81,15 @@ const createPolicy = async(req, res) =>{
                 frequencyPayment:lifeData.frequencyPayment,
                 beneficiaryName:lifeData.beneficiaryName,
                 beneficiaryRelation:lifeData.beneficiaryRelation,
-                status:lifeData.status
+                status:lifeData.status,
+                expiryDate:expiryDate,
+                premium:lifeData.premium
             });
         }
         else if(userData.InsuranceType=="Vehicle Insurance"){
             const {vehicleData} = req.body;
+
+            expiryDate = new Date(now.setFullYear(now.getFullYear() + 1));
              result = await Vehicle.create({
                 policyNumber:policyNo,
                 userId:userresult._id,  // Link the policy to the user
@@ -89,14 +104,30 @@ const createPolicy = async(req, res) =>{
                 frequencyPayment:vehicleData.frequencyPayment,
                 deductible:vehicleData.deductible,
                 policyType:vehicleData.policyType,
-                status:vehicleData.status
+                status:vehicleData.status,
+                expiryDate:expiryDate,
+                premium:vehicleData.premium
             });
         }
         //working on the response object to send back the user and policy details
         // work is remaining
 
         const lastName = userresult.name.last? userresult.name.last:""
-        
+        const date = new Date(result.createdAt);
+        const startDate= date.toLocaleString('en-US',{timeZone: 'America/New_York',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'}) 
+        const mailData={
+            userEmail:userresult.email,
+            userName:userresult.name.first+" "+lastName,
+            policyNumber:policyNo,
+            insuranceType:userresult.policies[0].insuranceType,
+            startDate:startDate,
+            expiryDate:result.expiryDate,
+            permium:result.premium
+        }
+        sendMail(mailData);
          // Send a response with the generated policy number
         res.status(200).json(policyNo);
     }

@@ -60,6 +60,12 @@ const VehicleSchema = new Schema({
 },
 status: {
   type: String,
+},
+expiryDate: {
+  type: Date,
+},
+premium:{
+  type:String
 }
 }, { timestamps: true });
 

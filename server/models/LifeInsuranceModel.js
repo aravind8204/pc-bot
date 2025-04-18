@@ -35,6 +35,7 @@ const lifeSchema = new Schema(
         policyType: {
           type: String,
           required: true,
+          enum: ["Whole Life Insurance","Term Life Insurance"]
         },
         policyTerm: {
           type: Number,
@@ -59,6 +60,12 @@ const lifeSchema = new Schema(
         },
         status: {
           type: String,
+        },
+        expiryDate: {
+          type: Date,
+        },
+        premium:{
+          type:String
         }
       }, { timestamps: true }
 )
