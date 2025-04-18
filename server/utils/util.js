@@ -5,10 +5,7 @@ const path = require('path');
 // Function to generate PDF
 function createPolicyPdf(data, filename) {
   const doc = new PDFDocument();
-    const folderpath = path.join(__dirname,'documents');
-    if (!fs.existsSync(folderpath)) {
-        fs.mkdirSync(folderpath, { recursive: true });  // Recursively create nested folders
-      }
+    const folderpath = "/tmp";
     
     const filepath = path.join(folderpath,filename);
   const stream = fs.createWriteStream(filepath)
