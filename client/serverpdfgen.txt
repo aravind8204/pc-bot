@@ -1,0 +1,902 @@
+CHATGPT Response:
+
+create pdf using pdfkit
+
+ChatGPT said:
+To create a PDF using pdfkit, you'll need to follow a few steps in your Python environment. Here's a quick guide:
+
+✅ Requirements
+Install pdfkit:
+
+bash
+Copy
+Edit
+pip install pdfkit
+Install wkhtmltopdf (which pdfkit uses under the hood):
+
+Windows: https://wkhtmltopdf.org/downloads.html
+
+macOS (with Homebrew):
+
+bash
+Copy
+Edit
+brew install --cask wkhtmltopdf
+Linux (Debian/Ubuntu):
+
+bash
+Copy
+Edit
+sudo apt-get install wkhtmltopdf
+📝 Example Code
+Here's a basic example of generating a PDF from an HTML string:
+
+python
+Copy
+Edit
+import pdfkit
+
+html = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test PDF</title>
+</head>
+<body>
+    <h1>Hello, PDF!</h1>
+    <p>This PDF was generated using pdfkit.</p>
+</body>
+</html>
+"""
+
+# Path to wkhtmltopdf if not in PATH
+path_to_wkhtmltopdf = '/usr/local/bin/wkhtmltopdf'  # Change as needed
+config = pdfkit.configuration(wkhtmltopdf=path_to_wkhtmltopdf)
+
+pdfkit.from_string(html, 'output.pdf', configuration=config)
+📁 Output
+The PDF file will be saved as output.pdf in your current directory.
+
+Let me know if you want to generate it from a URL or a file instead, or need help with a specific setup (Windows, macOS, etc.)!
+
+
+
+You said:
+in node js
+
+ChatGPT said:
+Ah gotcha — if you want to generate a PDF using pdfkit in Node.js, you're looking at a different package (called pdfkit, not related to the Python one).
+
+Here’s a quick guide to do it in Node.js:
+
+✅ Step 1: Install pdfkit
+bash
+Copy
+Edit
+npm install pdfkit
+📝 Step 2: Basic Example (Generate a PDF)
+js
+Copy
+Edit
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+
+// Create a document
+const doc = new PDFDocument();
+
+// Pipe the PDF into a writable stream
+doc.pipe(fs.createWriteStream('output.pdf'));
+
+// Add content
+doc.fontSize(25).text('Hello, this is a PDF generated using PDFKit in Node.js!', 100, 100);
+
+// Finalize PDF file
+doc.end();
+📁 Output
+This will generate an output.pdf file in the same directory.
+
+➕ Want to add more features?
+You can:
+
+Add images: doc.image('path/to/image.png', x, y)
+
+Add links: doc.link(x, y, width, height, 'http://example.com')
+
+Create tables (with a plugin or manually)
+
+Use different fonts: doc.font('path/to/font.ttf')
+
+Let me know if you want to:
+
+Generate from HTML (then you'd need something like puppeteer or html-pdf instead),
+
+Add tables/images,
+
+Or stream the PDF as a response in a web server (like with Express).
+
+
+
+You said:
+app.use('/pdfs', express.static("./documents"));
+
+when i try to get a file from the server it says cannot get
+
+ChatGPT said:
+Got it — you're trying to serve static PDF files using Express, but you're hitting a Cannot GET error. Let’s fix that. Here's how to make it work:
+
+✅ 1. Check Your Folder Structure
+Suppose your structure looks like this:
+
+pgsql
+Copy
+Edit
+project/
+│
+├── app.js (or server.js)
+├── documents/
+│   ├── file1.pdf
+│   └── file2.pdf
+✅ 2. Correct Express Code
+In your app.js:
+
+js
+Copy
+Edit
+const express = require('express');
+const app = express();
+const path = require('path');
+
+// Serve static files from /documents via /pdfs route
+app.use('/pdfs', express.static(path.join(__dirname, 'documents')));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+✅ 3. How to Access
+If you have a file called report.pdf inside the documents folder, access it like this in the browser:
+
+bash
+Copy
+Edit
+http://localhost:3000/pdfs/report.pdf
+⚠️ Common Issues
+❌ You tried to go to /pdfs without a filename — that'll show “Cannot GET /pdfs” unless there's an index.html inside.
+
+❌ Wrong folder path — use path.join(__dirname, 'documents') to avoid path errors.
+
+❌ File doesn't exist — double-check spelling/case.
+
+Let me know the file you're trying to access and what URL you used — I can help pinpoint it!
+
+
+
+You said:
+pdf is not created
+
+ChatGPT said:
+Ahh okay — if the PDF is not being created, let’s troubleshoot step by step. Since you're using pdfkit in Node.js, here's what to check:
+
+🔧 Sample Working Code
+Let’s make sure you’re using this kind of setup (create-and-save PDF):
+
+js
+Copy
+Edit
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+
+// Create a new PDF document
+const doc = new PDFDocument();
+
+// Pipe to a file
+doc.pipe(fs.createWriteStream('./documents/test.pdf'));
+
+// Add content
+doc.fontSize(25).text('Hello, PDF!', 100, 100);
+
+// Finalize the file
+doc.end();
+✅ Things to Check
+1. Does the /documents folder exist?
+The folder must exist before writing the file. If it doesn’t, Node won’t create it automatically and the PDF won’t be written.
+
+👉 Fix:
+
+js
+Copy
+Edit
+const fs = require('fs');
+const dir = './documents';
+
+if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+}
+Add that before you call fs.createWriteStream().
+
+2. Do you see any errors in the console?
+If fs.createWriteStream() fails silently (e.g. invalid path or permissions), it won’t write anything. Make sure you catch errors:
+
+js
+Copy
+Edit
+const stream = fs.createWriteStream('./documents/test.pdf');
+
+stream.on('error', (err) => {
+    console.error('Stream Error:', err);
+});
+3. Are you calling doc.end()?
+You must call .end() on the PDF document to finalize and save it.
+
+4. Run the script manually first
+Before serving the file via Express, make sure it’s created:
+
+bash
+Copy
+Edit
+node generate-pdf.js
+Then check if documents/test.pdf appears.
+
+Let me know:
+
+Are you trying to generate the PDF on a specific route (like /generate-pdf)?
+
+Do you want it to download in the browser or just save on the server?
+
+I can help you wire it all together.
+
+
+
+You said:
+EISDIR: illegal operation on a directory, open 'C:\Users\2897197\Desktop\project\pc-bot\server\documents
+
+ChatGPT said:
+Ah yes — that error tells us exactly what’s wrong:
+
+EISDIR: illegal operation on a directory
+You're trying to open a directory like it's a file.
+
+🛠️ What’s happening:
+Your code likely has something like:
+
+js
+Copy
+Edit
+fs.createWriteStream('./documents');
+or a bad path like:
+
+js
+Copy
+Edit
+fs.createWriteStream(path.join(__dirname, 'documents'));
+You're trying to write to a directory (documents) instead of a file inside that directory.
+
+✅ How to fix it
+Change your code to write to a specific file:
+
+js
+Copy
+Edit
+const path = require('path');
+const fs = require('fs');
+const PDFDocument = require('pdfkit');
+
+// Make sure 'documents' directory exists
+const dir = path.join(__dirname, 'documents');
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir);
+}
+
+// Create the PDF document
+const doc = new PDFDocument();
+
+// ✅ Correct file path (NOT just the directory!)
+const filePath = path.join(dir, 'my-pdf-file.pdf');
+
+const writeStream = fs.createWriteStream(filePath);
+doc.pipe(writeStream);
+
+doc.fontSize(25).text('Hello, this is a test PDF!', 100, 100);
+
+doc.end();
+
+writeStream.on('finish', () => {
+  console.log('PDF created at:', filePath);
+});
+💡 Pro Tip:
+You can dynamically generate filenames like:
+
+js
+Copy
+Edit
+const filename = `pdf-${Date.now()}.pdf`;
+const filePath = path.join(dir, filename);
+Let me know if you're creating the PDF from a route (e.g. via Express) and want to return or download it — I can help with that too.
+
+
+
+You said:
+Uncaught Exception: [Error: ENOENT: no such file or directory, open '/var/task/server/utils/documents/policy_AA34000003.pdf'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/var/task/server/utils/documents/policy_AA34000003.pdf'
+}
+Node.js process exited with exit status: 129. The logs above can help with debugging the issue.
+
+ChatGPT said:
+Thanks for sharing the full error — this one is super clear:
+
+🚨 Error:
+swift
+Copy
+Edit
+ENOENT: no such file or directory, open '/var/task/server/utils/documents/policy_AA34000003.pdf'
+🔍 Translation:
+You're trying to write (or read) a file in a directory that does not exist:
+/var/task/server/utils/documents/
+
+✅ Solution:
+Before trying to write the PDF file, make sure the folder exists. Here's how to safely create it if it's missing:
+
+🛠️ Fix Example:
+js
+Copy
+Edit
+const fs = require('fs');
+const path = require('path');
+const PDFDocument = require('pdfkit');
+
+// Define the full path to the folder and file
+const folderPath = path.join(__dirname, 'utils', 'documents');
+const filePath = path.join(folderPath, 'policy_AA34000003.pdf');
+
+// ✅ Make sure the folder exists
+if (!fs.existsSync(folderPath)) {
+  fs.mkdirSync(folderPath, { recursive: true });  // Recursively create nested folders
+}
+
+// Create the PDF document
+const doc = new PDFDocument();
+doc.pipe(fs.createWriteStream(filePath));
+
+doc.fontSize(20).text('Generated PDF: policy_AA34000003.pdf', 100, 100);
+
+doc.end();
+📦 In a Serverless Environment (like AWS Lambda)?
+'/var/task/' is usually read-only.
+
+You need to write to /tmp/ instead.
+
+📍 Fix for Lambda or Vercel:
+
+js
+Copy
+Edit
+const filePath = '/tmp/policy_AA34000003.pdf';
+Then use that path to write, read, or return the file.
+
+Let me know:
+
+Are you running this on AWS Lambda, Vercel, or just a local server?
+
+Should the PDF be saved, returned as a download, or sent in response?
+
+I can give you the exact setup based on your goal.
+
+
+
+You said:
+Error: ENOENT: no such file or directory, mkdir '/var/task/server/utils/documents'
+    at Object.mkdirSync (node:fs:1364:26)
+    at createPolicyPdf (/var/task/server/utils/util.js:10:12)
+    at createPolicy (/var/task/server/controllers/controller.js:138:31)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'mkdir',
+  path: '/var/task/server/utils/documents'
+}
+
+ChatGPT said:
+Ah, now it's crystal clear — you're running this in a serverless environment (like AWS Lambda, Vercel Functions, or Netlify), and the code is trying to create a folder at:
+
+swift
+Copy
+Edit
+/var/task/server/utils/documents
+❌ Why This Fails
+The path /var/task/ is read-only in serverless environments.
+
+You cannot write or create folders/files under that path at runtime.
+
+The only writable directory in most serverless environments is /tmp.
+
+✅ Solution: Use /tmp for Temporary Files
+Update your code to write your PDF to the /tmp directory:
+
+✅ Updated Code Snippet
+js
+Copy
+Edit
+const fs = require('fs');
+const path = require('path');
+const PDFDocument = require('pdfkit');
+
+function createPolicyPdf(policyId) {
+  // ✅ Use /tmp directory in serverless environments
+  const folderPath = '/tmp';
+  const filePath = path.join(folderPath, `policy_${policyId}.pdf`);
+
+  // Create PDF
+  const doc = new PDFDocument();
+  doc.pipe(fs.createWriteStream(filePath));
+  doc.fontSize(16).text(`Policy PDF for ${policyId}`, 100, 100);
+  doc.end();
+
+  return filePath;
+}
+📤 What Next?
+After creating the file in /tmp, you can:
+
+Send it back in the HTTP response (e.g. as a download),
+
+Upload it to S3 or another cloud storage,
+
+Attach it to an email, etc.
+
+🧪 Want a full Express route that returns the PDF?
+Let me know your use case:
+
+Are you returning the PDF to the client?
+
+Saving to cloud storage?
+
+Emailing it?
+
+I'll tailor the code to that workflow.
+
+
+
+You said:
+this is from the backend code
+
+ChatGPT said:
+Perfect — since this is backend code and you're running it in a serverless environment (based on the /var/task path and the error), here’s the key takeaway:
+
+🚫 You cannot write to:
+swift
+Copy
+Edit
+/var/task/server/utils/documents
+Because /var/task is read-only in serverless environments like AWS Lambda, Vercel, or Netlify Functions.
+
+✅ You can only write to:
+bash
+Copy
+Edit
+/tmp
+That’s the only writable directory in most serverless environments — and it's ephemeral (it gets wiped out after the function ends).
+
+🔧 Fix Your Code
+Update your backend function (e.g. createPolicyPdf) to use /tmp instead of your project directory.
+
+✅ Example:
+js
+Copy
+Edit
+const fs = require('fs');
+const path = require('path');
+const PDFDocument = require('pdfkit');
+
+function createPolicyPdf(policyId) {
+  const tempDir = '/tmp'; // ✅ this is safe in serverless environments
+  const fileName = `policy_${policyId}.pdf`;
+  const filePath = path.join(tempDir, fileName);
+
+  const doc = new PDFDocument();
+  const writeStream = fs.createWriteStream(filePath);
+
+  doc.pipe(writeStream);
+  doc.fontSize(20).text(`Policy PDF: ${policyId}`, 100, 100);
+  doc.end();
+
+  return new Promise((resolve, reject) => {
+    writeStream.on('finish', () => resolve(filePath));
+    writeStream.on('error', reject);
+  });
+}
+Then from your controller, you can do:
+
+js
+Copy
+Edit
+const filePath = await createPolicyPdf('AA34000003');
+
+// Do something with filePath:
+// - read it into a buffer to send back
+// - upload to S3
+// - stream it back to the user
+✅ Example to Send the File (Express style):
+js
+Copy
+Edit
+res.download(filePath, 'policy.pdf', (err) => {
+  if (err) {
+    console.error('Error sending file:', err);
+    res.status(500).send('Failed to send PDF');
+  }
+});
+Let me know if you're:
+
+Running this in AWS Lambda, Vercel, or somewhere else?
+
+Want to return the PDF to the frontend, or upload it?
+
+I can tailor the exact flow based on what you're doing!
+
+
+
+You said:
+what should i do to access that
+
+ChatGPT said:
+Great question! To access the PDF you're generating in the backend — especially in a serverless environment like AWS Lambda or Vercel — you’ll need to decide how you want the frontend or client to use it.
+
+✅ You Have Three Common Options
+1. Return the PDF as a File Download (Directly in Response)
+If your backend is handling an HTTP request (like via Express or an API route), you can send the PDF file back as a downloadable response.
+
+🔧 Example (Express-style route):
+js
+Copy
+Edit
+app.get('/api/policy/:id', async (req, res) => {
+  const policyId = req.params.id;
+  const filePath = await createPolicyPdf(policyId);
+
+  res.download(filePath, `policy_${policyId}.pdf`, (err) => {
+    if (err) {
+      console.error('Download error:', err);
+      res.status(500).send('Failed to download file');
+    }
+  });
+});
+2. Read the PDF into a Buffer and Return It (for APIs / Serverless)
+If you’re using something like AWS Lambda (API Gateway) or a serverless function, read the file into a buffer and return it in the response with the correct headers:
+
+🧠 Example (Lambda / Vercel style):
+js
+Copy
+Edit
+const fs = require('fs');
+const path = require('path');
+
+exports.handler = async (event) => {
+  const policyId = 'AA34000003';
+  const filePath = await createPolicyPdf(policyId);
+
+  const pdfBuffer = fs.readFileSync(filePath);
+
+  return {
+    statusCode: 200,
+    headers: {
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=policy_${policyId}.pdf`
+    },
+    body: pdfBuffer.toString('base64'),
+    isBase64Encoded: true
+  };
+};
+3. Upload to Cloud Storage (like AWS S3) and Return a URL
+If you want the file to persist or be accessed later, upload it to a storage service.
+
+🔧 High-level Steps:
+Use AWS SDK to upload to S3:
+
+js
+Copy
+Edit
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
+
+const fileContent = fs.readFileSync(filePath);
+
+const uploadParams = {
+  Bucket: 'your-bucket-name',
+  Key: `pdfs/policy_${policyId}.pdf`,
+  Body: fileContent,
+  ContentType: 'application/pdf'
+};
+
+await s3.upload(uploadParams).promise();
+Then return the public or presigned URL to the client.
+
+👀 So... What Should You Do?
+Let me know:
+
+Are you using Express, AWS Lambda, or Vercel Functions?
+
+Do you want the frontend to download the PDF, view it, or just store it?
+
+I’ll give you a copy-paste version tailored to your setup.
+
+
+
+You said:
+express
+
+ChatGPT said:
+Perfect! You're using Express — awesome, that makes things nice and straightforward. Here's how you can generate a PDF on the backend and serve it as a downloadable file via a route.
+
+✅ Goal: Generate PDF → Serve It via /download/:policyId
+📁 Project Structure (Assuming this):
+pgsql
+Copy
+Edit
+project/
+├── server.js
+├── utils/
+│   └── createPdf.js
+🧠 Step-by-Step Guide
+1. Create the PDF Generator (utils/createPdf.js)
+js
+Copy
+Edit
+// utils/createPdf.js
+const fs = require('fs');
+const path = require('path');
+const PDFDocument = require('pdfkit');
+
+function createPolicyPdf(policyId) {
+  const fileName = `policy_${policyId}.pdf`;
+  const filePath = path.join(__dirname, '..', 'tmp', fileName);
+
+  // Ensure tmp directory exists
+  const dir = path.join(__dirname, '..', 'tmp');
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+
+  const doc = new PDFDocument();
+  const writeStream = fs.createWriteStream(filePath);
+
+  doc.pipe(writeStream);
+  doc.fontSize(20).text(`Policy Document for ID: ${policyId}`, 100, 100);
+  doc.end();
+
+  return new Promise((resolve, reject) => {
+    writeStream.on('finish', () => resolve(filePath));
+    writeStream.on('error', reject);
+  });
+}
+
+module.exports = createPolicyPdf;
+2. Express Route to Generate + Send the PDF (server.js)
+js
+Copy
+Edit
+const express = require('express');
+const path = require('path');
+const createPolicyPdf = require('./utils/createPdf');
+
+const app = express();
+const PORT = 3000;
+
+app.get('/download/:policyId', async (req, res) => {
+  const { policyId } = req.params;
+
+  try {
+    const filePath = await createPolicyPdf(policyId);
+    res.download(filePath, `policy_${policyId}.pdf`, (err) => {
+      if (err) {
+        console.error('Error sending file:', err);
+        res.status(500).send('Error downloading the PDF');
+      }
+    });
+  } catch (error) {
+    console.error('PDF creation error:', error);
+    res.status(500).send('Failed to generate PDF');
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});
+✅ Test it:
+Start the server:
+
+bash
+Copy
+Edit
+node server.js
+Then visit:
+
+bash
+Copy
+Edit
+http://localhost:3000/download/AA34000003
+It should generate the PDF and prompt a download. 🧾✅
+
+Let me know if you want to:
+
+Show the PDF in-browser instead of download it,
+
+Automatically delete the file after sending,
+
+Stream it instead of saving it to disk.
+
+
+
+You said:
+in vercel the pdf stores on tmp directory how can do for that diretcory like express.static
+
+ChatGPT said:
+Ah, great follow-up!
+
+You're deploying on Vercel, and want to serve generated PDFs stored in /tmp, similar to how you'd use express.static() in a traditional Express app.
+
+Here’s the key:
+
+❗ The /tmp directory in Vercel is:
+✅ Writable (you can create files here at runtime)
+
+❌ Not publicly accessible via static routes like express.static()
+
+So you can't do this:
+
+js
+Copy
+Edit
+app.use('/pdfs', express.static('/tmp')); // ❌ won't work in Vercel
+✅ What You Should Do
+Create a dynamic route (API handler) to read and serve files from /tmp.
+
+🧠 Option 1: Serve PDF via Express route
+Assuming you're using express() in your Vercel serverless function (api/index.js or similar):
+
+✅ Example:
+js
+Copy
+Edit
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+
+const app = express();
+
+app.get('/pdfs/:filename', (req, res) => {
+  const { filename } = req.params;
+  const filePath = path.join('/tmp', filename);
+
+  // Check if the file exists
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send('File not found');
+  }
+
+  res.sendFile(filePath);
+});
+
+module.exports = app;
+This works even on Vercel, because you're manually handling the /pdfs/:filename request — not relying on static middleware.
+
+🧪 Example URL
+After generating a PDF at /tmp/policy_ABC123.pdf, you can access it like:
+
+ruby
+Copy
+Edit
+https://your-vercel-domain.com/api/pdfs/policy_ABC123.pdf
+⚠️ Remember:
+All files in /tmp are ephemeral — they'll disappear after each serverless function finishes or cold starts.
+
+If you want permanent storage, consider uploading to S3, Cloudinary, or similar after generation.
+
+🆘 Want to Stream it Instead?
+If you don’t want to write to disk, you can also generate and stream the PDF directly in memory to the response. Let me know if that fits better and I’ll share that version too!
+
+Want help structuring this in a Vercel api/ function file?
+
+
+
+You said:
+yes
+
+ChatGPT said:
+Awesome — let's build this for Vercel's api/ functions, where you want to:
+
+✅ Generate a PDF
+✅ Store (temporarily) in /tmp
+✅ Serve it through an API route (/api/pdfs/[filename].js) like express.static
+
+🧾 Setup Overview
+File structure:
+
+bash
+Copy
+Edit
+/api/
+├── generate.js             → generates and saves PDF to /tmp
+└── pdfs/
+    └── [filename].js       → serves that PDF from /tmp
+1. api/generate.js → Generate and Save PDF
+js
+Copy
+Edit
+// api/generate.js
+import fs from 'fs';
+import path from 'path';
+import PDFDocument from 'pdfkit';
+
+export default function handler(req, res) {
+  const { policyId = 'demo' } = req.query;
+  const fileName = `policy_${policyId}.pdf`;
+  const filePath = path.join('/tmp', fileName);
+
+  // Create the PDF
+  const doc = new PDFDocument();
+  const writeStream = fs.createWriteStream(filePath);
+
+  doc.pipe(writeStream);
+  doc.fontSize(20).text(`Policy ID: ${policyId}`, 100, 100);
+  doc.end();
+
+  writeStream.on('finish', () => {
+    res.status(200).json({
+      message: 'PDF generated successfully',
+      downloadUrl: `/api/pdfs/${fileName}`
+    });
+  });
+
+  writeStream.on('error', (err) => {
+    console.error(err);
+    res.status(500).json({ error: 'PDF generation failed' });
+  });
+}
+2. api/pdfs/[filename].js → Serve the PDF from /tmp
+js
+Copy
+Edit
+// api/pdfs/[filename].js
+import fs from 'fs';
+import path from 'path';
+
+export default function handler(req, res) {
+  const { filename } = req.query;
+  const filePath = path.join('/tmp', filename);
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send('PDF not found');
+  }
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+
+  const stream = fs.createReadStream(filePath);
+  stream.pipe(res);
+}
+✅ Usage Flow
+Call:
+
+bash
+Copy
+Edit
+GET /api/generate?policyId=AA34000003
+Response:
+
+json
+Copy
+Edit
+{
+  "message": "PDF generated successfully",
+  "downloadUrl": "/api/pdfs/policy_AA34000003.pdf"
+}
+Visit:
+
+bash
+Copy
+Edit
+/api/pdfs/policy_AA34000003.pdf
+To view or download the generated PDF.
+
+Let me know if you'd rather stream the PDF without saving to disk, or upload it to S3 — I can help with that too!
