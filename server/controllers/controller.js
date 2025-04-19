@@ -138,7 +138,7 @@ const createPolicy = async(req, res) =>{
         const filename = `policy_${policyNo}.pdf`;
 
         const fileUrl = await createPolicyPdf(mailData, filename);
-        const fullUrl = `${req.protocol}://${req.get('host')}${fileUrl}`;
+        const fullUrl = `${fileUrl}`;
          // Send a response with the generated policy number
         res.status(200).json({policyNo,fullUrl});
     }

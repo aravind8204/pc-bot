@@ -1,31 +1,42 @@
-const fs = require('fs');
 const PDFDocument = require('pdfkit');
-const path = require('path');
+const { put } = require('@vercel/blob');
 
-// Function to generate PDF
-function createPolicyPdf(data, filename) {
-  const doc = new PDFDocument();
-  const folderpath = "/tmp";
-    
-  const filepath = path.join(folderpath,filename);
-  const stream = fs.createWriteStream(filepath)
+// Function to generate PDF and upload to Vercel Blob
+async function createPolicyPdf(data, filename) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const doc = new PDFDocument();
+      const chunks = [];
 
-  
-  doc.pipe(stream);
+      // Capture data in memory
+      doc.on('data', (chunk) => chunks.push(chunk));
+      doc.on('end', async () => {
+        const pdfBuffer = Buffer.concat(chunks);
 
-  // Example content — you can customize this
-  doc.fontSize(20).text('Insurance Policy Document', { align: 'center' });
-  doc.moveDown();
-  doc.fontSize(14).text(`Policy Number: ${data.policyNumber}`);
-  doc.text(`Name: ${data.name}`);
-  doc.text(`Email: ₹${data.email}`);
-  doc.text(`Insurance Type: ${data.insuranceType}`);
-  doc.text(`Start Date: ${data.startDate}`);
-  doc.text(`Expiry Date: ${data.expiryDate}`);
+        const { url } = await put(`${filename}`, pdfBuffer, {
+          access: 'public',
+          token: "vercel_blob_rw_NBIkKdTRfIMnsXeg_h1Xl4FWOwkj1qvOHk4733deKPaJn7j",
+          allowOverwrite: true
+        });
 
-  doc.end();
+        resolve(url);
+      });
 
-  return `/pdf/${filename}`;
+      // PDF content
+      doc.fontSize(20).text('Insurance Policy Document', { align: 'center' });
+      doc.moveDown();
+      doc.fontSize(14).text(`Policy Number: ${data.policyNumber}`);
+      doc.text(`Name: ${data.name}`);
+      doc.text(`Email: ${data.email}`); // Fixed '₹' symbol
+      doc.text(`Insurance Type: ${data.insuranceType}`);
+      doc.text(`Start Date: ${data.startDate}`);
+      doc.text(`Expiry Date: ${data.expiryDate}`);
+
+      doc.end();
+    } catch (error) {
+      reject(error);
+    }
+  });
 }
 
-module.exports={createPolicyPdf}
+module.exports = { createPolicyPdf };
