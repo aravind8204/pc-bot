@@ -4,6 +4,8 @@ const Vehicle = require("../models/VehicleInsuranceModel");
 const User = require("../models/UserModel.js")
 const {generatePolicyNo,calculatePremium} = require("../utils/Policy");
 const {createPolicyPdf} = require("../utils/util.js");
+const path = require('path');
+const fs = require('fs');
 
 // Function to check the premium based on request data
 const checkPremium = async(req,res) =>{
@@ -155,6 +157,22 @@ const getPolicyNo = async(req,res)=>{
     }
 }
 
+const getPolicyPdf = async(req,res)=>{
+    try{
+        const {filename} = req.params;
+        const filepath = path.join('/tmp',`${filename}`);
+
+        if (!fs.existsSync(filepath)) {
+            return res.status(404).send('File not found');
+          }
+
+        res.download(filepath);
+    }
+    catch(e){
+        res.status(500).send(e.message);
+    }
+}
+
 // Test function to receive and send back the data (useful for debugging)
 const testPolicy = async (req, res) => {
     try {
@@ -168,5 +186,5 @@ const testPolicy = async (req, res) => {
   }
 
   // Export the functions to be used in the routes
-module.exports = {createPolicy,testPolicy,checkPremium,getPolicyNo};
+module.exports = {createPolicy,testPolicy,checkPremium,getPolicyNo,getPolicyPdf};
 

@@ -1,6 +1,6 @@
 // Importing required modules
 const express = require('express');
-const {checkPremium,createPolicy,testPolicy,getPolicyNo} = require("../controllers/controller");
+const {checkPremium,createPolicy,testPolicy,getPolicyNo,getPolicyPdf} = require("../controllers/controller");
 
 
 
@@ -17,5 +17,5 @@ router.post("/createpolicy", createPolicy);
 // Route to generate a policy number (this will return a unique policy number)
 router.post("/getpolicyno",getPolicyNo);
 
-
+router.get("/pdf/:filename",getPolicyPdf);
 module.exports = router;

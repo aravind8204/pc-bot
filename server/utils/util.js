@@ -5,9 +5,9 @@ const path = require('path');
 // Function to generate PDF
 function createPolicyPdf(data, filename) {
   const doc = new PDFDocument();
-    const folderpath = "/tmp";
+  const folderpath = "/tmp";
     
-    const filepath = path.join(folderpath,filename);
+  const filepath = path.join(folderpath,filename);
   const stream = fs.createWriteStream(filepath)
 
   
@@ -25,7 +25,7 @@ function createPolicyPdf(data, filename) {
 
   doc.end();
 
-  return `/pdfs/${filename}`;
+  return `/pdf/${filename}`;
 }
 
 module.exports={createPolicyPdf}
