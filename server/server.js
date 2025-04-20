@@ -13,7 +13,6 @@ connectDb();
 app.use(express.json());
 app.use(cors());
 
-app.use('/pdfs', express.static(path.join(__dirname, 'utils','documents')));
 
 //initial testing
 app.use("/test", (req,res)=>{

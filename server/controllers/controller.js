@@ -148,43 +148,8 @@ const createPolicy = async(req, res) =>{
     }
 }
 
-const getPolicyNo = async(req,res)=>{
-    try {
-        const policy =await generatePolicyNo(req.body);
-        res.status(200).json(policy)
-    } catch (error) {
-        res.send(500).json({error});
-    }
-}
 
-const getPolicyPdf = async(req,res)=>{
-    try{
-        const {filename} = req.params;
-        const filepath = path.join('/tmp',`${filename}`);
-
-        if (!fs.existsSync(filepath)) {
-            return res.status(404).send('File not found');
-          }
-
-        res.download(filepath);
-    }
-    catch(e){
-        res.status(500).send(e.message);
-    }
-}
-
-// Test function to receive and send back the data (useful for debugging)
-const testPolicy = async (req, res) => {
-    try {
-      // Send back the data received in the request body
-      const d = req.body;
-      res.send(d);
-    } catch (e) {
-      // If an error occurs, send the error message
-      res.send(e);
-    }
-  }
 
   // Export the functions to be used in the routes
-module.exports = {createPolicy,testPolicy,checkPremium,getPolicyNo,getPolicyPdf};
+module.exports = {createPolicy,checkPremium};
 
