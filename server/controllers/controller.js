@@ -67,7 +67,7 @@ const createPolicy = async(req, res) =>{
                 expiryDate = new Date(now.setFullYear(now.getFullYear() + 1));
             } 
             else if (lifeData.policyType === 'Term Life Insurance' && lifeData.policyTerm) {
-                expiryDate = new Date(now.setFullYear(now.getFullYear() + this.policyTerm));
+                expiryDate = new Date(now.setFullYear(now.getFullYear() + lifeData.policyTerm));
             }
 
              result = await Life.create({
