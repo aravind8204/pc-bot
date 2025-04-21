@@ -40,8 +40,8 @@ const calculatePremium = (data) =>{
 
         // Base rates for life insurance policies
         const baseRates = {
-            "Whole Life Insurance": 1.5,
-            "Term Insurance": 1.2
+            "Whole Life Insurance": 1.2,
+            "Term Insurance": 1.5
         };
 
         // Get the base rate for the policy type (default to 1.5 if not found)
@@ -67,7 +67,7 @@ const calculatePremium = (data) =>{
         // Vehicle insurance rates based on coverage type
         const vehicleRates = {
             "Third Party": 2000,
-            "Comprehensive": 5000
+            "Comprehensive": 4000
         };
 
         // Factors based on vehicle make and model
