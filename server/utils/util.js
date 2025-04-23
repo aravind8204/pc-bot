@@ -85,8 +85,10 @@ async function createPolicyPdf(data, filename) {
 
       doc.fontSize(12).fillColor('black');
       doc.text(`Full Name: ${data.name}`);
-      doc.text(`Email: ${data.email}`);
-      if (data.mobile) doc.text(`Phone: ${data.mobile}`);
+      doc.text(`Age: ${data.age}`)
+      doc.text(`Email Id: ${data.email}`);
+      doc.text(`Phone: ${data.mobile}`);
+      doc.text(`Address: ${data.address.city}, ${data.address.zip}, ${data.address.country}`)
       doc.moveDown(1);
 
       // Footer

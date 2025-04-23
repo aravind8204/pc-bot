@@ -130,6 +130,7 @@ const createPolicy = async(req, res) =>{
             name:userresult.name.first+" "+lastName,
             mobile:userresult.mobile,
             age:userresult.age,
+            address:userresult.address,
             policyNumber:policyNo,
             insuranceType:userresult.policies[0].insuranceType,
             startDate:startDate,

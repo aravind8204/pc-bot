@@ -26,7 +26,7 @@ const userSchema = new Schema(
     city: { type: String, default: null },
     number: { type: String, default: null },
     street: { type: String, default: null },
-    country: { type: String, required: true }
+    country: { type: String }
   },
   mobile: {
     type: String,
