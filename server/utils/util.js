@@ -49,7 +49,7 @@ async function createPolicyPdf(data, filename) {
       doc
         .fontSize(16)
         .fillColor('#333')
-        .text('📄 Policy Details', { underline: true })
+        .text('Policy Details', { underline: true })
         .moveDown(0.5);
 
       doc.fontSize(12).fillColor('black');
@@ -68,7 +68,7 @@ async function createPolicyPdf(data, filename) {
       doc
         .fontSize(16)
         .fillColor('#333')
-        .text('👤 Insured Person', { underline: true })
+        .text('Insured Person', { underline: true })
         .moveDown(0.5);
 
       doc.fontSize(12).fillColor('black');

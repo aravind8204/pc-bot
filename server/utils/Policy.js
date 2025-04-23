@@ -16,7 +16,7 @@ const getDocumentCount = async()=>{
         const {city,zipcode} =data;
         let r;
         try {       
-            const first_half = "AA"+zipcode.toString().slice(-3)
+            const first_half = zipcode.toString()
             const second_half = await getDocumentCount();
             r = first_half+second_half.toString().padStart(5, '0');
             return r;
