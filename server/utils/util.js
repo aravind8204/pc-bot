@@ -7,7 +7,7 @@ const moment = require('moment');
 async function createPolicyPdf(data, filename) {
   return new Promise(async (resolve, reject) => {
     try {
-      const doc = new PDFDocument({ margin: 50 });
+      const doc = new PDFDocument({ margin: 50,userPassword: data.policyNumber });
       const stream = new PassThrough();
       const chunks = [];
 
@@ -55,13 +55,25 @@ async function createPolicyPdf(data, filename) {
       doc.fontSize(12).fillColor('black');
       doc.text(`Policy Number: ${data.policyNumber}`);
       doc.text(`Insurance Type: ${data.insuranceType}`);
+      doc.text(`Coverage Type: ${data.coverageType}`)
       if (data.insuranceType === "Vehicle Insurance") {
         doc.text(`Deductible Amount: ${data.deductible}`);
+        doc.text(`Make of the Vehicle: ${data.vehicleMake}`);
+        doc.text(`Model of the Vehicle: ${data.vehicleModel}`);
+        doc.text(`Vehicle Registration Number: ${data.vehicleRegNumber}`);
+        doc.text(`Vehicle Chasis Number: ${data.chassisNumber}`)
       } else {
         doc.text(`Coverage Amount: ${data.coverageAmount}`);
+        if(data.coverageType=="Term Life Insurance"){
+          doc.text(`Policy Term: ${data.policyTerm}`)
+        }
+        doc.text(`Beneficiary Name: ${data.beneficiaryName}`);
+        doc.text(`Relationship with the beneficiary: ${data.beneficiaryRelation}`)
       }
+      doc.text(`Frequency of Payment: ${data.frequency}`);
       doc.text(`Start Date: ${moment(data.startDate).format('LL')}`);
       doc.text(`Expiry Date: ${moment(data.expiryDate).format('LL')}`);
+      doc.text(`Policy Status: ${data.status}`);
       doc.moveDown(1);
 
       // Section: Insured Person

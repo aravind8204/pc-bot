@@ -129,6 +129,7 @@ const createPolicy = async(req, res) =>{
             email:userresult.email,
             name:userresult.name.first+" "+lastName,
             mobile:userresult.mobile,
+            age:userresult.age,
             policyNumber:policyNo,
             insuranceType:userresult.policies[0].insuranceType,
             startDate:startDate,
@@ -136,8 +137,10 @@ const createPolicy = async(req, res) =>{
             permium:result.premium,
             frequency:result.frequencyPayment,
             status:result.status,
+            coverageType:result.policyType
         }
-        Object.assign(mailData, userresult.policies[0].insuranceType =="Vehicle Insurance" ? {"deductible":result.deductible} : {"coverageAmount":result.coverageAmount} )
+        Object.assign(mailData, userresult.policies[0].insuranceType =="Vehicle Insurance" ? {"deductible":result.deductible,"vehicleRegNumber":result.vehicleRegNumber,"chassisNumber":result.chassisNumber,"vehicleMake":result.vehicleMake,"vehicleModel":result.vehicleModel} : {"coverageAmount":result.coverageAmount,"beneficiaryName":result.beneficiaryName,"beneficiaryRelation":result.beneficiaryRelation} )
+        Object.assign(mailData, result.policyType == "Term Life Insurance" ? {"policyTerm":result.policyTerm} : {})
 
         const filename = `policy_${policyNo}.pdf`;
 
