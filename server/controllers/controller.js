@@ -128,12 +128,16 @@ const createPolicy = async(req, res) =>{
         const mailData={
             email:userresult.email,
             name:userresult.name.first+" "+lastName,
+            mobile:userresult.mobile,
             policyNumber:policyNo,
             insuranceType:userresult.policies[0].insuranceType,
             startDate:startDate,
             expiryDate:expiry,
-            permium:result.premium
+            permium:result.premium,
+            frequency:result.frequencyPayment,
+            status:result.status,
         }
+        Object.assign(mailData, userresult.policies[0].insuranceType =="Vehicle Insurance" ? {"deductible":result.deductible} : {"coverageAmount":result.coverageAmount} )
 
         const filename = `policy_${policyNo}.pdf`;
 
